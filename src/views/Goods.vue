@@ -154,6 +154,8 @@
 
 <script>
 import NavBar from '../components/Layout/NavBar.vue'
+import api from '../config/api'
+import { ElMessage } from 'element-plus'
 
 export default {
   name: 'GoodsView',
@@ -167,102 +169,10 @@ export default {
         type: '',
         status: ''
       },
-      goodsList: [
-        {
-          goodsId: 'SF20240320001',
-          deviceId: 'NFC:04:E7:52:B9:D4:80',
-          name: '阿根廷红虾',
-          type: 'shrimp',
-          specification: 'L1级 2000-3000头/kg',
-          size: '大包装',
-          weight: 25.5,
-          temperature: -18,
-          location: 'A1',
-          inTime: '2024-03-20 10:00:00',
-          status: 'in_stock'
-        },
-        {
-          goodsId: 'SF20240319002',
-          deviceId: 'NFC:04:E7:52:C1:A3:F5',
-          name: '加拿大北极甜虾',
-          type: 'shrimp',
-          specification: 'L2级 2000-3000头/kg',
-          size: '中包装',
-          weight: 18.2,
-          temperature: -20,
-          location: 'A2',
-          inTime: '2024-03-19 15:30:00',
-          status: 'mortgaged'
-        },
-        {
-          goodsId: 'SF20240318003',
-          deviceId: '978020137962',
-          name: '智利三文鱼',
-          type: 'fish',
-          specification: 'L3级 2000-3000头/kg',
-          size: '小包装',
-          weight: 15.8,
-          temperature: -22,
-          location: 'B1',
-          inTime: '2024-03-18 09:15:00',
-          status: 'in_stock'
-        },
-        {
-          goodsId: 'SF20240317004',
-          deviceId: 'NFC:04:E7:52:D8:E2:B1',
-          name: '大连扇贝',
-          type: 'shellfish',
-          specification: 'L4级 2000-3000头/kg',
-          size: '大包装',
-          weight: 12.5,
-          temperature: -18,
-          location: 'B2',
-          inTime: '2024-03-17 14:20:00',
-          status: 'mortgaged'
-        },
-        {
-          goodsId: 'SF20240316005',
-          deviceId: '978159683254',
-          name: '帝王蟹',
-          type: 'crab',
-          specification: 'L1级 2000-3000头/kg',
-          size: '中包装',
-          weight: 8.6,
-          temperature: -20,
-          location: 'A1',
-          inTime: '2024-03-16 11:40:00',
-          status: 'in_stock'
-        },
-        {
-          goodsId: 'SF20240315006',
-          deviceId: 'NFC:04:E7:52:F4:C7:A9',
-          name: '青岛鲅鱼',
-          type: 'fish',
-          specification: 'L2级 2000-3000头/kg',
-          size: '小包装',
-          weight: 20.5,
-          temperature: -19,
-          location: 'A2',
-          inTime: '2024-03-15 16:50:00',
-          status: 'out_stock'
-        },
-        {
-          goodsId: 'SF20240314007',
-          deviceId: '978314529687',
-          name: '波士顿龙虾',
-          type: 'shellfish',
-          specification: 'L3级 2000-3000头/kg',
-          size: '大包装',
-          weight: 10.2,
-          temperature: -20,
-          location: 'B1',
-          inTime: '2024-03-14 13:25:00',
-          status: 'mortgaged'
-        }
-      ],
+      goodsList: [],
       currentPage: 1,
       pageSize: 10,
-      total: 100,
+      total: 0,
       dialogVisible: false,
       dialogTitle: '新增入库',
       goodsForm: {
@@ -313,8 +223,20 @@ export default {
       }
       return texts[status] || status
     },
-    handleSearch() {
-      // TODO: 实现搜索逻辑
+    async handleSearch() {
+      try {
+        const response = await api.get('/goods/list', {
+          params: {
+            ...this.filterForm,
+            page: this.currentPage,
+            size: this.pageSize
+          }
+        })
+        this.goodsList = response.items
+        this.total = response.total
+      } catch (error) {
+        ElMessage.error('获取货物列表失败')
+      }
     },
     resetForm() {
       this.filterForm = {
@@ -345,30 +267,40 @@ export default {
       this.dialogVisible = true
       this.goodsForm = { ...row }
     },
-    handleDelete(row) {
+    async handleDelete(row) {
       this.$confirm('确认删除该货物记录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        // TODO: 实现删除逻辑
-        this.$message.success('删除成功')
+      }).then(async () => {
+        try {
+          await api.delete(`/goods/${row.id}`)
+          ElMessage.success('删除成功')
+          this.handleSearch() // 刷新列表
+        } catch (error) {
+          ElMessage.error('删除失败')
+        }
       }).catch(() => {})
     },
     handleSizeChange(val) {
       this.pageSize = val
-      // TODO: 重新加载数据
+      this.handleSearch()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      // TODO: 重新加载数据
+      this.handleSearch()
     },
-    submitForm() {
-      this.$refs.goodsForm.validate((valid) => {
+    async submitForm() {
+      this.$refs.goodsForm.validate(async (valid) => {
         if (valid) {
-          // TODO: 实现提交逻辑
-          this.dialogVisible = false
-          this.$message.success('操作成功')
+          try {
+            await api.post('/goods/inbound', this.goodsForm)
+            this.dialogVisible = false
+            ElMessage.success('入库成功')
+            this.handleSearch() // 刷新列表
+          } catch (error) {
+            ElMessage.error(error.response?.data?.error || '入库失败')
+          }
         }
       })
     },
@@ -376,6 +308,9 @@ export default {
       // TODO: 实现扫描NFC或条形码的逻辑
       this.$message.info('请将设备靠近NFC读取器或对准条形码扫描器')
     }
+  },
+  created() {
+    this.handleSearch() // 初始加载数据
   }
 }
 </script>
