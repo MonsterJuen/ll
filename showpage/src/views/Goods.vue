@@ -45,7 +45,7 @@
           <el-table-column prop="name" label="海鲜名称"></el-table-column>
           <el-table-column prop="type" label="类型" width="100">
             <template #default="scope">
-              <el-tag>{{ getTypeText(scope.row.type) }}</el-tag>
+              <el-tag>{{ scope.row.type }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="specification" label="等级" width="150"></el-table-column>
@@ -86,12 +86,12 @@
         <el-form :model="goodsForm" :rules="rules" ref="goodsForm" label-width="100px">
           <el-form-item label="海鲜名称" prop="name">
             <el-select v-model="goodsForm.name" placeholder="请选择海鲜名称">
-              <el-option label="阿根廷红虾" value="1"></el-option>
-              <el-option label="加拿大北极甜虾" value="2"></el-option>
-              <el-option label="智利三文鱼" value="3"></el-option>
-              <el-option label="大连扇贝" value="4"></el-option>
-              <el-option label="青岛鲅鱼" value="5"></el-option>
-              <el-option label="波士顿龙虾" value="6"></el-option>
+              <el-option label="阿根廷红虾" value="阿根廷红虾"></el-option>
+              <el-option label="加拿大北极甜虾" value="加拿大北极甜虾"></el-option>
+              <el-option label="智利三文鱼" value="智利三文鱼"></el-option>
+              <el-option label="大连扇贝" value="大连扇贝"></el-option>
+              <el-option label="青岛鲅鱼" value="青岛鲅鱼"></el-option>
+              <el-option label="波士顿龙虾" value="波士顿龙虾"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="设备标识" prop="deviceId">
@@ -103,25 +103,25 @@
           </el-form-item>
           <el-form-item label="海鲜类型" prop="type">
             <el-select v-model="goodsForm.type" placeholder="请选择海鲜类型">
-              <el-option label="冷冻虾类" value="shrimp"></el-option>
-              <el-option label="冷冻鱼类" value="fish"></el-option>
-              <el-option label="冷冻贝类" value="shellfish"></el-option>
-              <el-option label="冷冻蟹类" value="crab"></el-option>
+              <el-option label="冷冻虾类" value="冷冻虾类"></el-option>
+              <el-option label="冷冻鱼类" value="冷冻鱼类"></el-option>
+              <el-option label="冷冻贝类" value="冷冻贝类"></el-option>
+              <el-option label="冷冻蟹类" value="冷冻蟹类"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="等级" prop="specification">
             <el-select v-model="goodsForm.specification" placeholder="请选择等级">
-              <el-option label="L1级 2000-3000头/kg" value="first"></el-option>
-              <el-option label="L2级 2000-3000头/kg" value="second"></el-option>
-              <el-option label="L3级 2000-3000头/kg" value="third"></el-option>
-              <el-option label="L4级 2000-3000头/kg" value="forth"></el-option>
+              <el-option label="L1级 2000-3000头/kg" value="L1级 2000-3000头/kg"></el-option>
+              <el-option label="L2级 2000-3000头/kg" value="L2级 2000-3000头/kg"></el-option>
+              <el-option label="L3级 2000-3000头/kg" value="L3级 2000-3000头/kg"></el-option>
+              <el-option label="L4级 2000-3000头/kg" value="L4级 2000-3000头/kg"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="包装" prop="size">
             <el-select v-model="goodsForm.size" placeholder="请选择包装大小">
-              <el-option label="大包装" value="big"></el-option>
-              <el-option label="中包装" value="mid"></el-option>
-              <el-option label="小包装" value="small"></el-option>
+              <el-option label="大包装" value="大包装"></el-option>
+              <el-option label="中包装" value="中包装"></el-option>
+              <el-option label="小包装" value="小包装"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="重量" prop="weight">
@@ -154,7 +154,6 @@
 
 <script>
 import NavBar from '../components/Layout/NavBar.vue'
-import axios from 'axios'
 
 export default {
   name: 'GoodsView',
@@ -168,52 +167,148 @@ export default {
         type: '',
         status: ''
       },
-      goodsList: [],
+      goodsList: [
+        {
+          goodsId: 'SF20240320001',
+          deviceId: 'NFC:04:E7:52:B9:D4:80',
+          name: '阿根廷红虾',
+          type: 'shrimp',
+          specification: 'L1级 2000-3000头/kg',
+          size: '大包装',
+          weight: 25.5,
+          temperature: -18,
+          location: 'A1',
+          inTime: '2024-03-20 10:00:00',
+          status: 'in_stock'
+        },
+        {
+          goodsId: 'SF20240319002',
+          deviceId: 'NFC:04:E7:52:C1:A3:F5',
+          name: '加拿大北极甜虾',
+          type: 'shrimp',
+          specification: 'L2级 2000-3000头/kg',
+          size: '中包装',
+          weight: 18.2,
+          temperature: -20,
+          location: 'A2',
+          inTime: '2024-03-19 15:30:00',
+          status: 'mortgaged'
+        },
+        {
+          goodsId: 'SF20240318003',
+          deviceId: '978020137962',
+          name: '智利三文鱼',
+          type: 'fish',
+          specification: 'L3级 2000-3000头/kg',
+          size: '小包装',
+          weight: 15.8,
+          temperature: -22,
+          location: 'B1',
+          inTime: '2024-03-18 09:15:00',
+          status: 'in_stock'
+        },
+        {
+          goodsId: 'SF20240317004',
+          deviceId: 'NFC:04:E7:52:D8:E2:B1',
+          name: '大连扇贝',
+          type: 'shellfish',
+          specification: 'L4级 2000-3000头/kg',
+          size: '大包装',
+          weight: 12.5,
+          temperature: -18,
+          location: 'B2',
+          inTime: '2024-03-17 14:20:00',
+          status: 'mortgaged'
+        },
+        {
+          goodsId: 'SF20240316005',
+          deviceId: '978159683254',
+          name: '帝王蟹',
+          type: 'crab',
+          specification: 'L1级 2000-3000头/kg',
+          size: '中包装',
+          weight: 8.6,
+          temperature: -20,
+          location: 'A1',
+          inTime: '2024-03-16 11:40:00',
+          status: 'in_stock'
+        },
+        {
+          goodsId: 'SF20240315006',
+          deviceId: 'NFC:04:E7:52:F4:C7:A9',
+          name: '青岛鲅鱼',
+          type: 'fish',
+          specification: 'L2级 2000-3000头/kg',
+          size: '小包装',
+          weight: 20.5,
+          temperature: -19,
+          location: 'A2',
+          inTime: '2024-03-15 16:50:00',
+          status: 'out_stock'
+        },
+        {
+          goodsId: 'SF20240314007',
+          deviceId: '978314529687',
+          name: '波士顿龙虾',
+          type: 'shellfish',
+          specification: 'L3级 2000-3000头/kg',
+          size: '大包装',
+          weight: 10.2,
+          temperature: -20,
+          location: 'B1',
+          inTime: '2024-03-14 13:25:00',
+          status: 'mortgaged'
+        }
+      ],
+      currentPage: 1,
+      pageSize: 10,
+      total: 100,
       dialogVisible: false,
       dialogTitle: '新增入库',
       goodsForm: {
         name: '',
-        deviceId: '',
         type: '',
         specification: '',
         size: '',
-        weight: 0,
-        temperature: 0,
-        location: ''
+        weight: 1,
+        temperature: -18,
+        location: '',
+        deviceId: ''
       },
       rules: {
-        name: [{ required: true, message: '请选择海鲜名称', trigger: 'change' }],
+        name: [{ required: true, message: '请输入海鲜名称', trigger: 'blur' }],
         deviceId: [{ required: true, message: '请输入设备标识', trigger: 'blur' }],
         type: [{ required: true, message: '请选择海鲜类型', trigger: 'change' }],
-        specification: [{ required: true, message: '请选择等级', trigger: 'change' }],
-        size: [{ required: true, message: '请选择包装大小', trigger: 'change' }],
+        specification: [{ required: true, message: '请选择等级', trigger: 'blur' }],
+        size: [{ required: true, message: '请选择包装', trigger: 'blur' }],
         weight: [{ required: true, message: '请输入重量', trigger: 'blur' }],
         temperature: [{ required: true, message: '请输入存储温度', trigger: 'blur' }],
         location: [{ required: true, message: '请选择存储位置', trigger: 'change' }]
-      },
-      currentPage: 1,
-      pageSize: 10,
-      total: 0
+      }
     }
   },
-  created() {
-    this.fetchGoodsList()
-  },
   methods: {
-    async fetchGoodsList() {
-      try {
-        const response = await axios.get('http://localhost:8080/api/goods/list', {
-          params: this.filterForm
-        })
-        this.goodsList = response.data.items
-        this.total = response.data.total
-      } catch (error) {
-        this.$message.error('获取货物列表失败')
+    getTypeText(type) {
+      return type
+    },
+    getStatusType(status) {
+      const types = {
+        normal: 'success',
+        warning: 'warning',
+        danger: 'danger'
       }
+      return types[status] || 'info'
+    },
+    getStatusText(status) {
+      const texts = {
+        in_stock: '在库',
+        out_stock: '已出库',
+        mortgaged: '抵押中'
+      }
+      return texts[status] || status
     },
     handleSearch() {
-      this.currentPage = 1
-      this.fetchGoodsList()
+      // TODO: 实现搜索逻辑
     },
     resetForm() {
       this.filterForm = {
@@ -221,107 +316,59 @@ export default {
         type: '',
         status: ''
       }
-      this.handleSearch()
     },
     handleAdd() {
       this.dialogTitle = '新增入库'
+      this.dialogVisible = true
       this.goodsForm = {
         name: '',
-        deviceId: '',
         type: '',
         specification: '',
         size: '',
-        weight: 0,
-        temperature: 0,
-        location: ''
-      }
-      this.dialogVisible = true
-    },
-    async submitForm() {
-      try {
-        await this.$refs.goodsForm.validate()
-        if (this.dialogTitle === '新增入库') {
-          await axios.post('http://localhost:8080/api/goods/create', this.goodsForm)
-          this.$message.success('入库成功')
-        } else {
-          await axios.put(`http://localhost:8080/api/goods/update/${this.goodsForm.goodsId}`, this.goodsForm)
-          this.$message.success('更新成功')
-        }
-        this.dialogVisible = false
-        this.fetchGoodsList()
-      } catch (error) {
-        this.$message.error(error.response?.data?.error || '操作失败')
+        weight: 1,
+        temperature: -18,
+        location: '',
+        deviceId: ''
       }
     },
-    async handleEdit(row) {
+    handleOut() {
+      // TODO: 实现出库逻辑
+    },
+    handleEdit(row) {
       this.dialogTitle = '编辑货物'
-      this.goodsForm = { ...row }
       this.dialogVisible = true
+      this.goodsForm = { ...row }
     },
-    async handleDelete(row) {
-      try {
-        await this.$confirm('确认删除该货物？', '提示', {
-          type: 'warning'
-        })
-        await axios.delete(`http://localhost:8080/api/goods/delete/${row.goodsId}`)
+    handleDelete(row) {
+      this.$confirm('确认删除该货物记录?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // TODO: 实现删除逻辑
         this.$message.success('删除成功')
-        this.fetchGoodsList()
-      } catch (error) {
-        if (error !== 'cancel') {
-          this.$message.error('删除失败')
-        }
-      }
-    },
-    async handleOut(row) {
-      try {
-        await this.$confirm('确认出库该货物？', '提示', {
-          type: 'warning'
-        })
-        await axios.post(`http://localhost:8080/api/goods/out/${row.goodsId}`)
-        this.$message.success('出库成功')
-        this.fetchGoodsList()
-      } catch (error) {
-        if (error !== 'cancel') {
-          this.$message.error(error.response?.data?.error || '出库失败')
-        }
-      }
+      }).catch(() => {})
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.fetchGoodsList()
+      // TODO: 重新加载数据
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.fetchGoodsList()
+      // TODO: 重新加载数据
     },
-    getTypeText(type) {
-      const typeMap = {
-        shrimp: '冷冻虾类',
-        fish: '冷冻鱼类',
-        shellfish: '冷冻贝类',
-        crab: '冷冻蟹类'
-      }
-      return typeMap[type] || type
-    },
-    getStatusType(status) {
-      const statusMap = {
-        in_stock: 'success',
-        out_stock: 'info',
-        mortgaged: 'warning'
-      }
-      return statusMap[status] || 'info'
-    },
-    getStatusText(status) {
-      const statusMap = {
-        in_stock: '在库',
-        out_stock: '已出库',
-        mortgaged: '抵押中'
-      }
-      return statusMap[status] || status
+    submitForm() {
+      this.$refs.goodsForm.validate((valid) => {
+        if (valid) {
+          // TODO: 实现提交逻辑
+          this.dialogVisible = false
+          this.$message.success('操作成功')
+        }
+      })
     },
     scanDeviceId() {
-      // 模拟扫描设备ID
-      this.goodsForm.deviceId = 'NFC:' + Math.random().toString(16).slice(2, 8).toUpperCase()
+      // TODO: 实现扫描NFC或条形码的逻辑
+      this.$message.info('请将设备靠近NFC读取器或对准条形码扫描器')
     }
   }
 }
