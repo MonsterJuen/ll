@@ -57,7 +57,7 @@ func CreateGoods(c *gin.Context) {
 	// 生成批次编号
 	goods.ID = "SF" + time.Now().Format("20060102") + uuid.New().String()[:3]
 	goods.InTime = time.Now().Format(chineseTimeLayout)
-	goods.Status = "in_stock"
+	goods.Status = "instock"
 
 	fmt.Println(goods)
 
